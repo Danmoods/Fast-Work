@@ -63,8 +63,11 @@ def seed_skills():
     print("Skills seeded successfully.")
 
 def seed_users():
-    employer1 = User(username="employer1", email="Danmoods@example.com", password="password123", role="employer")
-    worker1 = User(username="worker1", email="Bettexample.com", password="password123", role="worker")
+    employer1 = User(username="employer1", email="Danmoods@example.com", role="employer")
+    worker1 = User(username="worker1", email="Bettexample.com", role="worker")
+
+    employer1.set_password("password123")
+    worker1.set_password("password123")
 
     db.session.add_all([
         employer1,
