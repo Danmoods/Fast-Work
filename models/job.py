@@ -13,6 +13,6 @@ class Job(db.Model):
     location = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     employer = db.relationship("User", back_populates="jobs")
-    applications = db.relationship("Application", back_populates="job", lazy=True)
+    applications = db.relationship("Application", back_populates="job", lazy=True, cascade="all, delete-orphan")
     category_id = db.Column(db.Integer, db.ForeignKey("job_categories.id"), nullable=False)
     category = db.relationship("JobCategory", back_populates="jobs")
