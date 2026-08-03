@@ -1,4 +1,14 @@
 from extensions import db
+from datetime import datetime
 
 class Application(db.Model):
     __tablename__ = "applications"
+
+    id = db.Column(db.Integer, primary_key=True)
+    worker_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    job_id = db.Column(db.Integer, db.ForeignKey("jobs.id"), nullable=False)
+    cover_letter = db.Column(db.Text)
+    status = db.Column(db.String(20), nullable=False, default="pending")  # pending, accepted, rejected
+    applied_at = db.Column(db.DateTime, default=datetime.utcnow)
+    worker = db.relationship("User", back_populates="applications", lazy=True)
+    job = db.relationship("Job", back_populates="applications", lazy=True)
