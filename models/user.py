@@ -12,4 +12,6 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     profile = db.relationship("Profile", back_populates="user", uselist=False)
-    
+    jobs = db.relationship("Job", back_populates="employer", lazy=True)
+    worker_skills = db.relationship("WorkerSkill", back_populates="worker", lazy=True)
+    applications = db.relationship("Application", back_populates="worker", lazy=True)
