@@ -44,5 +44,12 @@ from models.worker_skill import WorkerSkill
 from models.profile import Profile
 
 
+@app.route("/")
+def home():
+    return {
+        "message": "Fast-Work API is running successfully!"
+    }
+
+
 if __name__ == "__main__":
     app.run(debug=True)
