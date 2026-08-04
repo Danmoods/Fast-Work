@@ -5,12 +5,14 @@ from config import Config
 from flask_migrate import Migrate
 from controllers.auth_controller import auth_bp
 from controllers.job_controller import job_bp
+from controllers.application_controller import application_bp
 
 
 app = Flask(__name__)
 app.config.from_object(Config)
 app.register_blueprint(auth_bp)
 app.register_blueprint(job_bp)
+app.register_blueprint(application_bp)
 
 migrate = Migrate(app, db)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

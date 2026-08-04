@@ -17,12 +17,28 @@ from controllers.auth_utils import (
     employer_required
 )
 
+from marshmallow import ValidationError
+
 job_bp = Blueprint("job", __name__, url_prefix="/jobs")
 
 @job_bp.route("", methods=["GET"])
 def get_jobs():
-    jobs = Job.query.all()
-    return jsonify(jobs_schema.dump(jobs)), 200
+
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 10, type=int)
+
+    jobs = Job.query.paginate(
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+
+    return jsonify({
+        "page": jobs.page,
+        "pages": jobs.pages,
+        "total": jobs.total,
+        "jobs": jobs_schema.dump(jobs.items)
+    }), 200
 
 @job_bp.route("/<int:job_id>", methods=["GET"])
 def get_job(job_id):
@@ -32,22 +48,28 @@ def get_job(job_id):
 @job_bp.route("", methods=["POST"])
 @jwt_required()
 def create_job():
-    error = employer_required()
-    if error:
-        return error
 
-    data = request.get_json()
-    employer = current_user()
+    response = employer_required()
 
+    if response:
+        return response
+
+    try:
+        data = job_schema.load(request.get_json())
+
+    except ValidationError as err:
+        return jsonify(err.messages), 400
 
     job = Job(
-        title=data.get("title"),
-        description=data.get("description"),
-        salary=data.get("salary"),
-        location=data.get("location"),
-        category_id=data.get("category_id"),
-        employer_id=employer.id
+        title=data["title"],
+        description=data["description"],
+        salary=data["salary"],
+        location=data["location"],
+        category_id=data["category_id"],
+        employer_id=current_user().id
     )
+
+
     db.session.add(job)
     db.session.commit()
     return jsonify(job_schema.dump(job)), 201
