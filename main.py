@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 
 from extensions import db, ma, jwt, migrate
 from config import Config
@@ -17,6 +18,8 @@ from controllers.worker_skill_controller import worker_skill_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
+CORS(app)
+
 app.register_blueprint(auth_bp)
 app.register_blueprint(profile_bp)
 app.register_blueprint(job_bp)
