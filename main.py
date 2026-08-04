@@ -6,13 +6,24 @@ from flask_migrate import Migrate
 from controllers.auth_controller import auth_bp
 from controllers.job_controller import job_bp
 from controllers.application_controller import application_bp
+from controllers.profile_controller import profile_bp
+from controllers.category_controller import category_bp
+from controllers.skill_controller import skill_bp
+from controllers.worker_skill_controller import worker_skill_bp
+
+
+
 
 
 app = Flask(__name__)
 app.config.from_object(Config)
 app.register_blueprint(auth_bp)
+app.register_blueprint(profile_bp)
 app.register_blueprint(job_bp)
 app.register_blueprint(application_bp)
+app.register_blueprint(category_bp)
+app.register_blueprint(skill_bp)
+app.register_blueprint(worker_skill_bp)
 
 migrate = Migrate(app, db)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

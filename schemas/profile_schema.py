@@ -9,7 +9,8 @@ class ProfileSchema(ma.SQLAlchemyAutoSchema):
 
         load_instance = True
 
-    user = ma.Nested("UserSchema", exclude=("profile",))
+        include_fk = True
+
 
 profile_schema = ProfileSchema()
 profiles_schema = ProfileSchema(many=True)
