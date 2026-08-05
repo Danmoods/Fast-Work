@@ -4,6 +4,8 @@ from extensions import ma
 
 from models import WorkerSkill
 
+from schemas.skill_schema import SkillSchema
+
 
 class WorkerSkillSchema(ma.SQLAlchemyAutoSchema):
 
@@ -14,6 +16,7 @@ class WorkerSkillSchema(ma.SQLAlchemyAutoSchema):
 
     worker_id = fields.Integer(dump_only=True)
 
-
+    skill = fields.Nested(SkillSchema, dump_only=True)
+    
 worker_skill_schema = WorkerSkillSchema()
 worker_skills_schema = WorkerSkillSchema(many=True)
