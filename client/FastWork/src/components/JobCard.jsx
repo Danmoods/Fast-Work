@@ -4,13 +4,18 @@ export default function JobCard({
     description,
     salary,
     location,
+    onClick,
     children
 
 }){
 
     return(
 
-        <div className="job-card">
+        <div
+            className="job-card"
+            onClick={onClick}
+            style={{ cursor: "pointer" }}
+        >
 
             <h3>{title}</h3>
 

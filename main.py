@@ -11,7 +11,7 @@ from controllers.profile_controller import profile_bp
 from controllers.category_controller import category_bp
 from controllers.skill_controller import skill_bp
 from controllers.worker_skill_controller import worker_skill_bp
-
+from controllers.user_controller import user_bp
 
 
 
@@ -27,6 +27,8 @@ app.register_blueprint(application_bp)
 app.register_blueprint(category_bp)
 app.register_blueprint(skill_bp)
 app.register_blueprint(worker_skill_bp)
+app.register_blueprint(user_bp)
+
 
 migrate = Migrate(app, db)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

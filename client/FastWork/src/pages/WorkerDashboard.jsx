@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
@@ -13,10 +14,12 @@ export default function WorkerDashboard() {
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const [applications, setApplications] = useState([]);
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("user"));
     const token = localStorage.getItem("token");
+    
     
 
     setUser(savedUser);
@@ -132,7 +135,10 @@ const filteredJobs = jobs.filter((job) => {
 });
 
   return (
-    <div style={{ padding: "40px" }}>
+  <>
+    <Navbar />
+
+    <div className="dashboard">
       {user && (
         <>
           <h1>Welcome {user.username} 👋</h1>
@@ -187,7 +193,8 @@ const filteredJobs = jobs.filter((job) => {
                     description={job.description}
                     salary={job.salary}
                     location={job.location}
-                    >
+                    onClick={() => navigate(`/job/${job.id}`)}
+                >
                     <h3>{job.title}</h3>
 
                     <p>{job.description}</p>
@@ -202,7 +209,10 @@ const filteredJobs = jobs.filter((job) => {
 
                     <Button
                         text="Apply Now"
-                        onClick={() => applyForJob(job.id)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            applyForJob(job.id);
+                        }}
                     />
                 </JobCard>
             ))
@@ -244,6 +254,9 @@ const filteredJobs = jobs.filter((job) => {
             )}
         </>
       )}
-    </div>
-  );
+        </div>
+
+    <Footer />
+  </>
+);
 }

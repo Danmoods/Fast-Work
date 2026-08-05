@@ -20,6 +20,14 @@ export default function EmployerDashboard() {
   const [categories, setCategories] = useState([]);
   const [applications, setApplications] = useState({});
 
+  const [editingJob, setEditingJob] = useState(null);
+
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editSalary, setEditSalary] = useState("");
+  const [editLocation, setEditLocation] = useState("");
+  const [editCategory, setEditCategory] = useState("");
+
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("user"));
     const token = localStorage.getItem("token");
@@ -121,6 +129,51 @@ export default function EmployerDashboard() {
       console.error(err);
       alert("Failed to delete job.");
     }
+  };
+
+  const startEditing = (job) => {
+      setEditingJob(job.id);
+
+      setEditTitle(job.title);
+      setEditDescription(job.description);
+      setEditSalary(job.salary);
+      setEditLocation(job.location);
+      setEditCategory(job.category_id);
+  };
+
+
+  const saveEditedJob = async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+
+          await axios.patch(
+              `https://fast-work.onrender.com/jobs/${editingJob}`,
+              {
+                  title: editTitle,
+                  description: editDescription,
+                  salary: editSalary,
+                  location: editLocation,
+                  category_id: editCategory,
+              },
+              {
+                  headers: {
+                      Authorization: `Bearer ${token}`,
+                  },
+              }
+          );
+
+          alert("Job updated successfully!");
+
+          window.location.reload();
+
+      } catch (error) {
+
+          console.error(error);
+
+          alert("Failed to update job.");
+
+      }
   };
 
   const updateApplicationStatus = async (applicationId, status) => {
@@ -231,68 +284,142 @@ export default function EmployerDashboard() {
           <p>You haven't posted any jobs yet.</p>
         ) : (
           jobs.map((job) => (
-            <JobCard
-              key={job.id}
-              title={job.title}
-              description={job.description}
-              salary={job.salary}
-              location={job.location}
-            >
-              <hr />
 
-              <h4>Applicants</h4>
+              editingJob === job.id ? (
 
-              {applications[job.id]?.length > 0 ? (
-                applications[job.id].map((application) => (
-                  <ApplicantCard
-                    key={application.id}
-                    workerId={application.worker_id}
-                    status={application.status}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        gap: "10px",
-                        marginTop: "15px",
-                      }}
-                    >
+                  <div key={job.id} className="job-card">
+
+                      <h3>Edit Job</h3>
+
+                      <input
+                          type="text"
+                          value={editTitle}
+                          onChange={(e) => setEditTitle(e.target.value)}
+                          placeholder="Job Title"
+                      />
+
+                      <textarea
+                          value={editDescription}
+                          onChange={(e) => setEditDescription(e.target.value)}
+                          placeholder="Description"
+                      />
+
+                      <input
+                          type="number"
+                          value={editSalary}
+                          onChange={(e) => setEditSalary(e.target.value)}
+                          placeholder="Salary"
+                      />
+
+                      <input
+                          type="text"
+                          value={editLocation}
+                          onChange={(e) => setEditLocation(e.target.value)}
+                          placeholder="Location"
+                      />
+
+                      <select
+                          value={editCategory}
+                          onChange={(e) => setEditCategory(e.target.value)}
+                      >
+                          {categories.map((category) => (
+                              <option
+                                  key={category.id}
+                                  value={category.id}
+                              >
+                                  {category.name}
+                              </option>
+                          ))}
+                      </select>
+
                       <Button
-                        text="Accept"
-                        color="green"
-                        onClick={() =>
-                          updateApplicationStatus(
-                            application.id,
-                            "accepted"
-                          )
-                        }
+                          text="Save Changes"
+                          color="green"
+                          onClick={saveEditedJob}
                       />
 
                       <Button
-                        text="Reject"
-                        color="red"
-                        onClick={() =>
-                          updateApplicationStatus(
-                            application.id,
-                            "rejected"
-                          )
-                        }
+                          text="Cancel"
+                          color="gray"
+                          onClick={() => setEditingJob(null)}
                       />
-                    </div>
-                  </ApplicantCard>
-                ))
+
+                  </div>
+
               ) : (
-                <p>No applications yet.</p>
-              )}
 
-              <Button
-                text="Delete Job"
-                color="#dc2626"
-                onClick={() => deleteJob(job.id)}
-              />
-            </JobCard>
-          ))
-        )}
+                  <JobCard
+                      key={job.id}
+                      title={job.title}
+                      description={job.description}
+                      salary={job.salary}
+                      location={job.location}
+                  >
+
+                      <hr />
+
+                      <h4>Applicants</h4>
+
+                      {applications[job.id]?.length > 0 ? (
+                          applications[job.id].map((application) => (
+                              <ApplicantCard
+                                  key={application.id}
+                                  workerId={application.worker_id}
+                                  status={application.status}
+                              >
+                                  <div
+                                      style={{
+                                          display: "flex",
+                                          justifyContent: "center",
+                                          gap: "10px",
+                                          marginTop: "15px",
+                                      }}
+                                  >
+                                      <Button
+                                          text="Accept"
+                                          color="green"
+                                          onClick={() =>
+                                              updateApplicationStatus(
+                                                  application.id,
+                                                  "accepted"
+                                              )
+                                          }
+                                      />
+
+                                      <Button
+                                          text="Reject"
+                                          color="red"
+                                          onClick={() =>
+                                              updateApplicationStatus(
+                                                  application.id,
+                                                  "rejected"
+                                              )
+                                          }
+                                      />
+                                  </div>
+                              </ApplicantCard>
+                          ))
+                      ) : (
+                          <p>No applications yet.</p>
+                      )}
+
+                      <Button
+                          text="Edit Job"
+                          color="#2563eb"
+                          onClick={() => startEditing(job)}
+                      />
+
+                      <Button
+                          text="Delete Job"
+                          color="#dc2626"
+                          onClick={() => deleteJob(job.id)}
+                      />
+
+                  </JobCard>
+
+              )
+
+          )))}
       </div>
 
       <Footer />
