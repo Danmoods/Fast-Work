@@ -4,22 +4,38 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import JobDetails from "./pages/JobDetails";
-import EmployerDashboard from "./pages/EmployerDashboard";
 import WorkerDashboard from "./pages/WorkerDashboard";
+import EmployerDashboard from "./pages/EmployerDashboard";
 import Profile from "./pages/Profile";
 
 function App() {
   return (
     <BrowserRouter>
+
       <Routes>
+
         <Route path="/" element={<Home />} />
+
         <Route path="/login" element={<Login />} />
+
         <Route path="/register" element={<Register />} />
-        <Route path="/jobs/:id" element={<JobDetails />} />
-        <Route path="/employer-dashboard" element={<EmployerDashboard />} />
-        <Route path="/worker-dashboard" element={<WorkerDashboard />} />
+
+        <Route path="/job/:id" element={<JobDetails />} />
+
+        <Route
+          path="/worker-dashboard"
+          element={<WorkerDashboard />}
+        />
+
+        <Route
+          path="/employer-dashboard"
+          element={<EmployerDashboard />}
+        />
+
         <Route path="/profile" element={<Profile />} />
+
       </Routes>
+
     </BrowserRouter>
   );
 }

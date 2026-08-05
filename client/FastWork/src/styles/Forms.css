@@ -1,0 +1,47 @@
+.form-container{
+
+    max-width:500px;
+
+    margin:auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+.form-container input,
+.form-container textarea,
+.form-container select{
+
+    padding:12px;
+
+    border-radius:8px;
+
+    border:none;
+
+}
+
+.form-container button{
+
+    padding:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    cursor:pointer;
+
+    border-radius:8px;
+
+}
+
+.form-container button:hover{
+
+    background:#1d4ed8;
+
+}

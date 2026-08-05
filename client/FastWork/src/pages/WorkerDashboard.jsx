@@ -1,5 +1,185 @@
-function WorkerDashboard() {
-  return <h1>Worker Dashboard</h1>;
-}
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-export default WorkerDashboard;
+export default function WorkerDashboard() {
+  const [user, setUser] = useState(null);
+  const [jobs, setJobs] = useState([]);
+
+  const [applications, setApplications] = useState([]);
+
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
+    
+
+    setUser(savedUser);
+
+    axios
+      .get("https://fast-work.onrender.com/jobs", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setJobs(response.data.jobs);
+      })
+      .catch(console.error);
+
+      axios
+        .get("https://fast-work.onrender.com/applications", {
+            headers: {
+            Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => {
+            setApplications(response.data);
+        })
+        .catch(console.error);
+    }, []);
+
+
+  const applyForJob = async (jobId) => {
+
+    const token = localStorage.getItem("token");
+
+    try {
+
+        await axios.post(
+            "https://fast-work.onrender.com/applications",
+            {
+                job_id: jobId,
+                cover_letter: "I am interested in this job."
+            },
+            {
+                headers:{
+                    Authorization:`Bearer ${token}`
+                }
+            }
+        );
+
+        alert("Application submitted successfully!");
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        if(error.response){
+            alert(error.response.data.message);
+        }else{
+            alert("Failed to apply.");
+        }
+
+    }
+
+};
+
+
+const withdrawApplication = async (id) => {
+  const token = localStorage.getItem("token");
+
+  if (!window.confirm("Withdraw this application?")) return;
+
+  try {
+    await axios.delete(
+      `https://fast-work.onrender.com/applications/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setApplications(
+      applications.filter(
+        (application) => application.id !== id
+      )
+    );
+
+    alert("Application withdrawn successfully!");
+  } catch (error) {
+    console.error(error);
+    alert("Failed to withdraw application.");
+  }
+};
+
+  return (
+    <div style={{ padding: "40px" }}>
+      {user && (
+        <>
+          <h1>Welcome {user.username} 👋</h1>
+
+          <hr />
+
+          <h2>Available Jobs</h2>
+
+          {jobs.length === 0 ? (
+            <p>No jobs available.</p>
+          ) : (
+            jobs.map((job) => (
+              <div
+                key={job.id}
+                style={{
+                  border: "1px solid gray",
+                  padding: 20,
+                  marginBottom: 20,
+                  borderRadius: 10,
+                }}
+              >
+                <h3>{job.title}</h3>
+
+                <p>{job.description}</p>
+
+                <p>
+                  <strong>Location:</strong> {job.location}
+                </p>
+
+                <p>
+                  <strong>Salary:</strong> KES {job.salary}
+                </p>
+
+                <button onClick={() => applyForJob(job.id)}>
+                  Apply Now
+                </button>
+              </div>
+            ))
+          )}
+
+          <hr />
+          <h2>My Applications</h2>
+          {applications.length === 0 ? (
+            <p>You haven't applied for any jobs yet.</p>
+            ) : (
+            applications.map((application) => (
+                <div
+                key={application.id}
+                style={{
+                    border: "1px solid gray",
+                    borderRadius: "10px",
+                    padding: "20px",
+                    marginBottom: "20px",
+                }}
+                >
+                <p>
+                    <strong>Job ID:</strong> {application.job_id}
+                </p>
+
+                <p>
+                    <strong>Status:</strong> {application.status}
+                </p>
+
+                <p>{application.cover_letter}</p>
+
+                <button
+                    onClick={() => withdrawApplication(application.id)}
+                >
+                    Withdraw
+                </button>
+            </div>
+            ))
+            )}
+        </>
+      )}
+    </div>
+  );
+}
