@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 
 from extensions import db
 
-from models import User
+from models import User, Profile
 
 from schemas.user_schema import user_schema
 
@@ -30,6 +30,13 @@ def register():
     new_user.set_password(password)
 
     db.session.add(new_user)
+    db.session.commit()
+
+    profile = Profile(
+        user_id=new_user.id
+    )
+
+    db.session.add(profile)
     db.session.commit()
 
     return jsonify(user_schema.dump(new_user)), 201

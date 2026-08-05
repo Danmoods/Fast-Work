@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import JobCard from "../components/JobCard";
+import Button from "../components/Button";
 
 export default function WorkerDashboard() {
   const [user, setUser] = useState(null);
@@ -138,9 +142,10 @@ const withdrawApplication = async (id) => {
                   <strong>Salary:</strong> KES {job.salary}
                 </p>
 
-                <button onClick={() => applyForJob(job.id)}>
-                  Apply Now
-                </button>
+                <Button
+                    text="Apply Now"
+                    onClick={() => applyForJob(job.id)}
+                />
               </div>
             ))
           )}

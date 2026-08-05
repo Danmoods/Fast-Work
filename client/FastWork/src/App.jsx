@@ -7,6 +7,11 @@ import JobDetails from "./pages/JobDetails";
 import WorkerDashboard from "./pages/WorkerDashboard";
 import EmployerDashboard from "./pages/EmployerDashboard";
 import Profile from "./pages/Profile";
+import "./App.css";
+import "./styles/Navbar.css";
+import "./styles/Cards.css";
+import "./styles/Forms.css";
+import "./styles/Dashboard.css";
 
 function App() {
   return (
