@@ -8,6 +8,9 @@ import Button from "../components/Button";
 export default function WorkerDashboard() {
   const [user, setUser] = useState(null);
   const [jobs, setJobs] = useState([]);
+  const [search, setSearch] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   const [applications, setApplications] = useState([]);
 
@@ -19,17 +22,17 @@ export default function WorkerDashboard() {
     setUser(savedUser);
 
     axios
-      .get("https://fast-work.onrender.com/jobs", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setJobs(response.data.jobs);
-      })
-      .catch(console.error);
+        .get("https://fast-work.onrender.com/jobs", {
+            headers: {
+            Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => {
+            setJobs(response.data.jobs);
+        })
+        .catch(console.error);
 
-      axios
+    axios
         .get("https://fast-work.onrender.com/applications", {
             headers: {
             Authorization: `Bearer ${token}`,
@@ -39,6 +42,14 @@ export default function WorkerDashboard() {
             setApplications(response.data);
         })
         .catch(console.error);
+
+    axios
+        .get("https://fast-work.onrender.com/categories")
+        .then((response) => {
+            setCategories(response.data);
+        })
+        .catch(console.error);
+
     }, []);
 
 
@@ -107,6 +118,19 @@ const withdrawApplication = async (id) => {
   }
 };
 
+const filteredJobs = jobs.filter((job) => {
+
+  const matchesSearch =
+    job.title.toLowerCase().includes(search.toLowerCase());
+
+  const matchesCategory =
+    selectedCategory === "" ||
+    job.category_id === Number(selectedCategory);
+
+  return matchesSearch && matchesCategory;
+
+});
+
   return (
     <div style={{ padding: "40px" }}>
       {user && (
@@ -115,39 +139,74 @@ const withdrawApplication = async (id) => {
 
           <hr />
 
+        <input
+        type="text"
+        placeholder="Search jobs..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+            width: "100%",
+            padding: "10px",
+            marginBottom: "15px",
+        }}
+        />
+
+        <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            style={{
+                width: "100%",
+                padding: "10px",
+                marginBottom: "20px",
+            }}
+            >
+            <option value="">All Categories</option>
+
+            {categories.map((category) => (
+                <option
+                key={category.id}
+                value={category.id}
+                >
+                {category.name}
+                </option>
+            ))}
+        </select>
+
           <h2>Available Jobs</h2>
 
           {jobs.length === 0 ? (
             <p>No jobs available.</p>
           ) : (
-            jobs.map((job) => (
-              <div
-                key={job.id}
-                style={{
-                  border: "1px solid gray",
-                  padding: 20,
-                  marginBottom: 20,
-                  borderRadius: 10,
-                }}
-              >
-                <h3>{job.title}</h3>
+            filteredJobs.length === 0 ? (
+                <p>No jobs match your search.</p>
+            ) : (
+                filteredJobs.map((job) => (
+                <JobCard
+                    key={job.id}
+                    title={job.title}
+                    description={job.description}
+                    salary={job.salary}
+                    location={job.location}
+                    >
+                    <h3>{job.title}</h3>
 
-                <p>{job.description}</p>
+                    <p>{job.description}</p>
 
-                <p>
-                  <strong>Location:</strong> {job.location}
-                </p>
+                    <p>
+                    <strong>Location:</strong> {job.location}
+                    </p>
 
-                <p>
-                  <strong>Salary:</strong> KES {job.salary}
-                </p>
+                    <p>
+                    <strong>Salary:</strong> KES {job.salary}
+                    </p>
 
-                <Button
-                    text="Apply Now"
-                    onClick={() => applyForJob(job.id)}
-                />
-              </div>
+                    <Button
+                        text="Apply Now"
+                        onClick={() => applyForJob(job.id)}
+                    />
+                </JobCard>
             ))
+            )
           )}
 
           <hr />
