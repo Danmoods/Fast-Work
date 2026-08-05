@@ -7,6 +7,8 @@ import JobDetails from "./pages/JobDetails";
 import WorkerDashboard from "./pages/WorkerDashboard";
 import EmployerDashboard from "./pages/EmployerDashboard";
 import Profile from "./pages/Profile";
+import WorkerDetails from "./pages/WorkerDetails";
+
 import "./App.css";
 import "./styles/Navbar.css";
 import "./styles/Cards.css";
@@ -38,6 +40,8 @@ function App() {
         />
 
         <Route path="/profile" element={<Profile />} />
+
+        <Route path="/worker/:id" element={<WorkerDetails />} />
 
       </Routes>
 

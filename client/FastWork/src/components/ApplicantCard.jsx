@@ -1,44 +1,47 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 export default function ApplicantCard({
+  workerId,
+  status,
+  children,
+}) {
+  const [worker, setWorker] = useState(null);
+  const navigate = useNavigate();
 
-    workerId,
+  useEffect(() => {
+    axios
+      .get(`https://fast-work.onrender.com/users/${workerId}`)
+      .then((res) => {
+        setWorker(res.data);
+      })
+      .catch(console.error);
+  }, [workerId]);
 
-    status,
-
-    children
-
-}){
-
-    return(
-
-        <div
-            style={{
-                border:"1px solid gray",
-                padding:"15px",
-                marginBottom:"15px",
-                borderRadius:"8px"
-            }}
+  return (
+    <div
+        className="job-card"
+        onClick={() => navigate(`/worker/${workerId}`)}
+        style={{ cursor: "pointer" }}
         >
 
-            <p>
+      {worker ? (
+        <>
+          <h3>{worker.username}</h3>
 
-                <strong>Worker ID:</strong>
+          <p>{worker.email}</p>
+        </>
+      ) : (
+        <p>Loading worker...</p>
+      )}
 
-                {workerId}
+      <p>
+        <strong>Status:</strong> {status}
+      </p>
 
-            </p>
+      {children}
 
-            <p>
-
-                <strong>Status:</strong>
-
-                {status}
-
-            </p>
-
-            {children}
-
-        </div>
-
-    );
-
+    </div>
+  );
 }

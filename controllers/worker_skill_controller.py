@@ -43,6 +43,17 @@ def get_my_skills():
         worker_skills_schema.dump(skills)
     ), 200
 
+@worker_skill_bp.route("/<int:worker_id>", methods=["GET"])
+def get_worker_skills(worker_id):
+
+    skills = WorkerSkill.query.filter_by(
+        worker_id=worker_id
+    ).all()
+
+    return jsonify(
+        worker_skills_schema.dump(skills)
+    ), 200
+
 @worker_skill_bp.route("", methods=["POST"])
 @jwt_required()
 def add_skill():
