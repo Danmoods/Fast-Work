@@ -14,6 +14,10 @@ export default function Profile() {
     const [bio, setBio] = useState("");
     const [location, setLocation] = useState("");
     const [profilePhoto, setProfilePhoto] = useState("");
+    const [skills, setSkills] = useState([]);
+    const [allSkills, setAllSkills] = useState([]);
+    const [selectedSkill, setSelectedSkill] = useState("");
+    const [experience, setExperience] = useState("");
 
     useEffect(() => {
 
@@ -42,6 +46,22 @@ export default function Profile() {
             setLocation(res.data.location || "");
             setProfilePhoto(res.data.profile_photo || "");
           })
+
+          axios
+            .get("https://fast-work.onrender.com/worker-skills", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((res) => {
+              setSkills(res.data);
+            })
+
+            axios
+              .get("https://fast-work.onrender.com/skills")
+              .then((res) => {
+                setAllSkills(res.data);
+              })
           .catch(console.error);
 
     }, []);
