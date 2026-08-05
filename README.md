@@ -1,52 +1,36 @@
 # FastWork
 
-A full-stack job marketplace application that connects skilled workers with employers looking for casual and skilled labor opportunities.
+FastWork is a job marketplace application built to connect skilled workers with employers looking for casual, flexible, or practical labor.
 
-> **Status:** 🚧 Backend Foundation & Database Design in Progress
-
----
-
-## Project Overview
-
-FastWork is a web application designed to bridge the gap between employers and skilled workers who may not have formal academic qualifications but possess valuable practical skills.
-
-Employers can post jobs, while workers can create profiles, showcase their skills, and apply for available opportunities.
+> **Live demo:** https://fast-work-black.vercel.app/
 
 ---
 
-## Current Progress
+## What is FastWork?
 
-### ✅ Completed
+FastWork provides a platform where:
 
-- Flask project initialized
-- Virtual environment configured
-- Project structure organized
-- Flask extensions configured
-- Database migration setup
-- Models folder created
-- Controllers folder created
-- Schemas folder created
-- Initial database models scaffolded
-- ERD designed
+- Employers can post job openings and review applicants
+- Skilled workers can create profiles, showcase experience, and apply for jobs
+- Both workers and employers see simple, clean dashboards for their role
 
-### 🚧 In Progress
-
-- Building SQLAlchemy models
-- Database relationships
-- Authentication with JWT
-
-### 📌 Planned
-
-- REST API endpoints
-- User authentication & authorization
-- CRUD operations
-- React frontend
-- Job application workflow
-- Deployment
+This repository includes a Flask backend and a React frontend inside `client/FastWork`.
 
 ---
 
-# Tech Stack
+## Features
+
+- Role-based users: worker and employer
+- User registration and login
+- Job posting and browsing
+- Application tracking
+- Profile management
+- React frontend with reusable components
+- Flask backend with database models and migrations
+
+---
+
+## Tech Stack
 
 ### Backend
 
@@ -58,139 +42,128 @@ Employers can post jobs, while workers can create profiles, showcase their skill
 - Flask-JWT-Extended
 - Flask-CORS
 - PostgreSQL
-- Python Dotenv
+- python-dotenv
 
-### Frontend (Planned)
+### Frontend
 
 - React
 - Vite
-- Fetch API
+- React Router
+- Axios / Fetch
 
 ---
 
-# Project Structure
+## Project Structure
 
 ```text
 FastWork/
-│
-├── controllers/
-│   └── .keep
-│
-├── migrations/
-│
-├── models/
-│   ├── __init__.py
-│   ├── application.py
-│   ├── job.py
-│   ├── job_category.py
-│   ├── profile.py
-│   ├── skills.py
-│   ├── user.py
-│   └── worker_skills.py
-│
-├── schemas/
-│   └── .keep
-│
-├── extensions.py
-├── main.py
-├── requirements.txt
-└── README.md
+├── client/FastWork/         # React frontend app
+├── controllers/             # Route handler logic
+├── extensions.py            # Flask extension setup
+├── main.py                  # Flask application entry point
+├── migrations/              # Alembic migration scripts
+├── models/                  # SQLAlchemy data models
+├── schemas/                 # Serialization schemas
+├── requirements.txt         # Python dependencies
+└── README.md                # Project documentation
 ```
 
 ---
 
-# Database Design
+## Getting Started
 
-Current entities include:
-
-- User
-- Profile
-- Job
-- Job Category
-- Skill
-- Worker Skill
-- Application
-
-Relationships:
-
-- User ↔ Profile (One-to-One)
-- User → Job (One-to-Many)
-- Job Category → Job (One-to-Many)
-- User ↔ Skill (Many-to-Many via WorkerSkill)
-- User ↔ Job (Many-to-Many via Application)
-
----
-
-# Installation
-
-Clone the repository
+### 1. Clone the repository
 
 ```bash
 git clone <repository-url>
-```
-
-Navigate into the project
-
-```bash
 cd FastWork
 ```
 
-Create a virtual environment
+### 2. Backend setup
+
+Create and activate a virtual environment:
 
 ```bash
 python -m venv venv
-```
-
-Activate the virtual environment
-
-### Windows
-
-```bash
-venv\Scripts\activate
-```
-
-### Linux / macOS
-
-```bash
 source venv/bin/activate
 ```
 
-Install dependencies
+Install backend dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
+Create a `.env` file in the project root with values like:
+
+```env
+FLASK_APP=main.py
+FLASK_ENV=development
+DATABASE_URL=postgresql://user:password@localhost:5432/fastwork
+JWT_SECRET_KEY=your_secret_key
+```
+
+Run the database migrations:
+
+```bash
+flask db upgrade
+```
+
+Start the backend server:
+
+```bash
+flask run
+```
+
+### 3. Frontend setup
+
+Open a new terminal and run:
+
+```bash
+cd client/FastWork
+npm install
+npm run dev
+```
+
+The frontend should now be available at the local Vite URL shown in the terminal.
+
 ---
 
-# Current Dependencies
+## Deployment
 
-- Flask
-- Flask-SQLAlchemy
-- Flask-Migrate
-- Flask-JWT-Extended
-- Flask-CORS
-- Flask-RESTful
-- python-dotenv
-- psycopg2-binary
+Vercel link
+(https://fast-work.onrender.com/)
+```
 
 ---
 
-# Roadmap
+## Notes
 
-- [x] Backend setup
-- [x] Project architecture
-- [x] ERD design
-- [ ] SQLAlchemy models
-- [ ] Database migrations
-- [ ] JWT Authentication
-- [ ] Authorization
-- [ ] REST API
-- [ ] React Frontend
-- [ ] Deployment
+- Make sure your database is running before starting the backend.
+- If the backend runs on a different address or port, update the API base URL in `client/FastWork/src/services/api.js`.
+- The project uses JWT for authentication, so the backend must be configured with a valid `JWT_SECRET_KEY`.
 
 ---
 
-# Author
+## Roadmap
+
+- [x] Flask backend setup
+- [x] Project structure and data modeling
+- [ ] Complete SQLAlchemy models
+- [ ] Implement authentication and authorization
+- [ ] Build full REST API
+- [ ] Finish React frontend polish
+- [ ] Deploy frontend and backend
+
+---
+
+## Author
 
 **Daniel Bett**
+
+---
+
+## Contact
+
+saitamang1234@gmail.com
+
