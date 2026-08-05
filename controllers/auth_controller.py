@@ -33,7 +33,11 @@ def register():
     db.session.commit()
 
     profile = Profile(
-        user_id=new_user.id
+        user_id=new_user.id,
+        phone=data.get("phone"),
+        bio=data.get("bio"),
+        location=data.get("location"),
+        profile_photo=data.get("profile_photo")
     )
 
     db.session.add(profile)
