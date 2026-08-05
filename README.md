@@ -149,11 +149,11 @@ Vercel link
 
 - [x] Flask backend setup
 - [x] Project structure and data modeling
-- [ ] Complete SQLAlchemy models
-- [ ] Implement authentication and authorization
-- [ ] Build full REST API
-- [ ] Finish React frontend polish
-- [ ] Deploy frontend and backend
+- [X] Complete SQLAlchemy models
+- [X] Implement authentication and authorization
+- [X] Build full REST API
+- [X] Finish React frontend polish
+- [X] Deploy frontend and backend
 
 ---
 
